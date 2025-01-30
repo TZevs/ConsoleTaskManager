@@ -4,6 +4,8 @@ namespace ToDoListManager
 {
     internal class Program
     {
+        public static List<Tasks> allTasks = new List<Tasks>();
+        public static List<string> tags = new List<string> { "PSP", "Mobile Dev", "Meeting", "Doctor", "Home", "BDay", "None", "Add" };
         static void Main(string[] args)
         {
             var taskTable = new Table();
@@ -14,7 +16,20 @@ namespace ToDoListManager
             taskTable.AddColumn("Tags");
             taskTable.AddColumn("Status");
 
-            addTask();
+            foreach (Tasks t in allTasks)
+            {
+                taskTable.AddRow(t.GetTaskTitle());
+                taskTable.AddRow(t.GetTaskPriority());
+                taskTable.AddRow(t.GetDueDate().ToString());
+                foreach (var sub in t.GetSubTasks())
+                {
+                    taskTable.AddRow(sub);
+                }
+                taskTable.AddRow(t.GetStatus());
+                taskTable.AddRow(t.GetTags());
+            }
+
+            tableTesting();
         }
 
         public static void addTask()
@@ -26,8 +41,19 @@ namespace ToDoListManager
                 new TextPrompt<string>("Task Priority:")
                     .AddChoices(["High", "Medium", "Low"]));
 
-            // Date
-            List<string> subTasks = new List<string>();
+            var confirmDate = AnsiConsole.Prompt(
+                new TextPrompt<bool>("Add Due Date?")
+                .AddChoices([true, false])
+                .WithConverter(choice => choice ? "y" : "n"));
+
+            DateTime? dueDate = new DateTime();
+            if (confirmDate)
+            {
+                dueDate = AnsiConsole.Prompt(
+                    new TextPrompt<DateTime>("Due Date:"));
+            }
+
+            List<string>? subTasks = new List<string>();
             var confirmSubTasks = AnsiConsole.Prompt(
                 new TextPrompt<bool>("Add SubTasks?")
                 .AddChoices([true, false])
@@ -38,15 +64,10 @@ namespace ToDoListManager
                 while(true)
                 {
                     var subTask = AnsiConsole.Ask<string>(">>");
-                    if (subTask == null) { break; }
+                    if (subTask == String.Empty) { break; }
                     else { subTasks.Add(subTask); }
                 }
             }
-
-            List<string> tags = new List<string>
-            {
-                "PSP", "Mobile Dev", "Meeting", "Doctor", "Home", "BDay", "None"
-            };
 
             var taskTag = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -54,6 +75,30 @@ namespace ToDoListManager
                     .PageSize(7)
                     .AddChoices(tags));
 
+            Tasks newTask = new Tasks(taskName, priority, dueDate, subTasks, taskTag);
+            allTasks.Add(newTask);
+        }
+        public static void tableTesting()
+        {
+            var rows = new List<(string ID, string Name, string Age)>
+            {
+                ("1", "Alice", "25"),
+                ("2", "Bob", "30"),
+                ("3", "Charlie", "22"),
+            };
+
+            // Create a selection prompt
+            var selectedRow = AnsiConsole.Prompt(
+                new SelectionPrompt<(string ID, string Name, string Age)>()
+                    .Title("Select a row:")
+                    .PageSize(10)
+                    .HighlightStyle(Style.Parse("cyan")) // Highlight selected row
+                    .AddChoices(rows)
+                    .UseConverter(row => $"[cyan]{row.ID}[/] | {row.Name} | {row.Age}") // Format table rows
+            );
+
+            // Output the selected row
+            AnsiConsole.MarkupLine($"[green]You selected:[/] {selectedRow.ID} | {selectedRow.Name} | {selectedRow.Age}");
         }
     }
 }
