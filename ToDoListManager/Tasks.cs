@@ -12,6 +12,9 @@ namespace ToDoListManager
         private string taskPriority;
         private DateTime? dueDateTime;
         private List<string>? subTasks;
-        private string taskStatus;
+        private string taskStatus = "Inbox";
+        private string taskTags;
+
+        
     }
 }
