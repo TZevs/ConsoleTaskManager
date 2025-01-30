@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using Terminal.Gui;
 
 namespace ToDoListManager
 {
@@ -29,7 +30,6 @@ namespace ToDoListManager
                 taskTable.AddRow(t.GetTags());
             }
 
-            tableTesting();
         }
 
         public static void addTask()
@@ -78,27 +78,6 @@ namespace ToDoListManager
             Tasks newTask = new Tasks(taskName, priority, dueDate, subTasks, taskTag);
             allTasks.Add(newTask);
         }
-        public static void tableTesting()
-        {
-            var rows = new List<(string ID, string Name, string Age)>
-            {
-                ("1", "Alice", "25"),
-                ("2", "Bob", "30"),
-                ("3", "Charlie", "22"),
-            };
-
-            // Create a selection prompt
-            var selectedRow = AnsiConsole.Prompt(
-                new SelectionPrompt<(string ID, string Name, string Age)>()
-                    .Title("Select a row:")
-                    .PageSize(10)
-                    .HighlightStyle(Style.Parse("cyan")) // Highlight selected row
-                    .AddChoices(rows)
-                    .UseConverter(row => $"[cyan]{row.ID}[/] | {row.Name} | {row.Age}") // Format table rows
-            );
-
-            // Output the selected row
-            AnsiConsole.MarkupLine($"[green]You selected:[/] {selectedRow.ID} | {selectedRow.Name} | {selectedRow.Age}");
-        }
+        
     }
 }
