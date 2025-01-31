@@ -9,27 +9,8 @@ namespace ToDoListManager
         public static List<string> tags = new List<string> { "PSP", "Mobile Dev", "Meeting", "Doctor", "Home", "BDay", "None", "Add" };
         static void Main(string[] args)
         {
-            var taskTable = new Table();
-            taskTable.AddColumn("Title");
-            taskTable.AddColumn("Priority");
-            taskTable.AddColumn("Due Date");
-            taskTable.AddColumn("SubTasks");
-            taskTable.AddColumn("Tags");
-            taskTable.AddColumn("Status");
 
-            foreach (Tasks t in allTasks)
-            {
-                taskTable.AddRow(t.GetTaskTitle());
-                taskTable.AddRow(t.GetTaskPriority());
-                taskTable.AddRow(t.GetDueDate().ToString());
-                foreach (var sub in t.GetSubTasks())
-                {
-                    taskTable.AddRow(sub);
-                }
-                taskTable.AddRow(t.GetStatus());
-                taskTable.AddRow(t.GetTags());
-            }
-
+            dispalyTasks();
         }
 
         public static void addTask()
@@ -64,7 +45,7 @@ namespace ToDoListManager
                 while(true)
                 {
                     var subTask = AnsiConsole.Ask<string>(">>");
-                    if (subTask == String.Empty) { break; }
+                    if (subTask == "0") { break; }
                     else { subTasks.Add(subTask); }
                 }
             }
@@ -77,6 +58,31 @@ namespace ToDoListManager
 
             Tasks newTask = new Tasks(taskName, priority, dueDate, subTasks, taskTag);
             allTasks.Add(newTask);
+
+        }
+        public static void dispalyTasks()
+        {
+            Console.Clear();
+            var taskTable = new Table();
+            taskTable.AddColumn("Title");
+            taskTable.AddColumn("Priority");
+            taskTable.AddColumn("Due Date");
+            taskTable.AddColumn("SubTasks");
+            taskTable.AddColumn("Tags");
+            taskTable.AddColumn("Status");
+
+            foreach (Tasks t in allTasks)
+            {
+                taskTable.AddRow(t.GetTaskTitle());
+                taskTable.AddRow(t.GetTaskPriority());
+                taskTable.AddRow(t.GetDueDate().ToString());
+                foreach (var sub in t.GetSubTasks())
+                {
+                    taskTable.AddRow(sub);
+                }
+                taskTable.AddRow(t.GetStatus());
+                taskTable.AddRow(t.GetTags());
+            }
         }
         
     }
