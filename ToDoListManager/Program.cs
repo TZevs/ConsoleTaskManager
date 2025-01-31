@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using Terminal.Gui;
 
 namespace ToDoListManager
 {
