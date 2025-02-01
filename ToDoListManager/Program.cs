@@ -9,7 +9,7 @@ namespace ToDoListManager
         static void Main(string[] args)
         {
 
-            dispalyTasks();
+            addTask();
         }
 
         public static void addTask()
@@ -32,8 +32,12 @@ namespace ToDoListManager
                 dueDate = AnsiConsole.Prompt(
                     new TextPrompt<DateTime>("Due Date:"));
             }
+            else
+            {
+                dueDate = null;
+            }
 
-            List<string>? subTasks = new List<string>();
+            List<string> subTasks = new List<string>();
             var confirmSubTasks = AnsiConsole.Prompt(
                 new TextPrompt<bool>("Add SubTasks?")
                 .AddChoices([true, false])
@@ -48,6 +52,10 @@ namespace ToDoListManager
                     else { subTasks.Add(subTask); }
                 }
             }
+            else
+            {
+                subTasks.DefaultIfEmpty();
+            }
 
             var taskTag = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -57,11 +65,10 @@ namespace ToDoListManager
 
             Tasks newTask = new Tasks(taskName, priority, dueDate, subTasks, taskTag);
             allTasks.Add(newTask);
-
+            dispalyTasks();
         }
         public static void dispalyTasks()
         {
-            Console.Clear();
             var taskTable = new Table();
             taskTable.AddColumn("Title");
             taskTable.AddColumn("Priority");
@@ -72,16 +79,20 @@ namespace ToDoListManager
 
             foreach (Tasks t in allTasks)
             {
-                taskTable.AddRow(t.GetTaskTitle());
-                taskTable.AddRow(t.GetTaskPriority());
-                taskTable.AddRow(t.GetDueDate().ToString());
-                foreach (var sub in t.GetSubTasks())
-                {
-                    taskTable.AddRow(sub);
-                }
-                taskTable.AddRow(t.GetStatus());
-                taskTable.AddRow(t.GetTags());
+                var dueDate = t.GetDueDate()?.ToString() ?? string.Empty;
+                var subTasks = t.GetSubTasks() != null ? string.Join("\n", t.GetSubTasks()) : string.Empty;
+
+                taskTable.AddRow(
+                    t.GetTaskTitle(),
+                    t.GetTaskPriority(),
+                    dueDate,
+                    subTasks,
+                    t.GetTags(),
+                    t.GetStatus()
+                );
             }
+
+            AnsiConsole.Write(taskTable);
         }
         
     }
