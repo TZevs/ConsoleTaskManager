@@ -26,11 +26,11 @@ namespace ToDoListManager
                 .AddChoices([true, false])
                 .WithConverter(choice => choice ? "y" : "n"));
 
-            DateTime? dueDate = new DateTime();
+            DateOnly? dueDate = new DateOnly();
             if (confirmDate)
             {
                 dueDate = AnsiConsole.Prompt(
-                    new TextPrompt<DateTime>("Due Date:"));
+                    new TextPrompt<DateOnly>("Due Date:"));
             }
             else
             {

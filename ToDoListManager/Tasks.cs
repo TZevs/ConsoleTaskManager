@@ -10,12 +10,12 @@ namespace ToDoListManager
     {
         private string taskTitle;
         private string taskPriority;
-        private DateTime? dueDateTime;
+        private DateOnly? dueDateTime;
         private List<string>? subTasks;
         private string taskStatus;
         private string taskTags;
 
-        public Tasks(string title, string priority, DateTime? due, List<string>? subs, string tag)
+        public Tasks(string title, string priority, DateOnly? due, List<string>? subs, string tag)
         {
             taskTitle = title;
             taskPriority = priority;
@@ -27,10 +27,10 @@ namespace ToDoListManager
 
         public string GetTaskTitle() { return taskTitle; }
         public string GetTaskPriority() { return taskPriority; }
-        public DateTime? GetDueDate()
+        public DateOnly? GetDueDate()
         {
             if (dueDateTime == null) { return null; }
-            else { return (DateTime)dueDateTime; }
+            else { return (DateOnly)dueDateTime; }
         }
         public List<string>? GetSubTasks()
         {
