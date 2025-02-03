@@ -8,12 +8,31 @@ namespace ToDoListManager
         public static List<string> tags = new List<string> { "PSP", "Mobile Dev", "Meeting", "Doctor", "Home", "BDay", "None", "Add" };
         static void Main(string[] args)
         {
+            displayTasks();
 
-            addTask();
+            var menu = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Select Action:")
+                    .AddChoices("New Task", "Complete Task", "Edit Tasks", "Filter", "Quit")
+                );
+
+            while (true)
+            {
+                switch (menu)
+                {
+                    case "New Task": addTask(); return;
+                    case "Edit": editTasks(); return;
+                    case "Filter": return;
+                    case "Complete": return;
+                    case "Quit": return;
+                    default: break;
+                }
+            }
         }
 
         public static void addTask()
         {
+            Console.Clear();
             Console.WriteLine("Create Task");
             var taskName = AnsiConsole.Ask<string>("Task Name:");
 
@@ -65,10 +84,11 @@ namespace ToDoListManager
 
             Tasks newTask = new Tasks(taskName, priority, dueDate, subTasks, taskTag);
             allTasks.Add(newTask);
-            dispalyTasks();
+            displayTasks();
         }
-        public static void dispalyTasks()
+        public static void displayTasks()
         {
+            Console.Clear();
             var taskTable = new Table();
             taskTable.AddColumn("Title");
             taskTable.AddColumn("Priority");
@@ -94,6 +114,10 @@ namespace ToDoListManager
 
             AnsiConsole.Write(taskTable);
         }
-        
+        public static void editTasks()
+        {
+            Console.Clear();
+
+        }
     }
 }
